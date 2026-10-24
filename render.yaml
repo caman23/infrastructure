@@ -36,9 +36,13 @@ services:
         sync: false
       - key: ASTRQ_STORAGE__REMOTE__SECRET_ACCESS_KEY
         sync: false
-      # --- only traffic coming through radar.astrq.io.vn (Cloudflare) is served
-      - key: ASTRQ_API__ORIGIN_SECRET
-        generateValue: true
+      # --- optional: serve only traffic coming through your Cloudflare domain. Requires a
+      # Cloudflare Transform Rule adding header X-Astrq-Origin (see docs/deploy-render.md).
+      # - key: ASTRQ_API__ORIGIN_SECRET
+      #   generateValue: true
+      # --- public deployment (no login): visitors cannot switch tools on/off from the web
+      - key: ASTRQ_API__ALLOW_TOOL_CONTROL
+        value: "false"
       # --- optional Telegram alerts
       - key: ASTRQ_ALERTS__TELEGRAM__ENABLED
         value: "false"
