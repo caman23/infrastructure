@@ -1,0 +1,13 @@
+name = "astrq-keepalive"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+# Cloudflare cron runs in UTC. 01:00–08:50 UTC = 08:00–15:50 Vietnam; the script itself
+# only pings inside 08:45–15:10 Vietnam time, Monday–Friday.
+[triggers]
+crons = ["*/10 1-8 * * MON-FRI"]
+
+[vars]
+# Your Render service URL (the *.onrender.com address, NOT the Access-protected domain:
+# /health on it stays open while every other path requires the origin secret).
+TARGET_URL = "https://astrq-radar.onrender.com"

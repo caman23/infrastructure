@@ -1,0 +1,46 @@
+# Render Blueprint — radar backend + dashboard on Render's free plan.
+# Free web services sleep after 15 min without INCOMING traffic (the outbound DNSE
+# WebSocket does not count), so deploy/keepalive-worker pings /health from 08:45 to
+# 15:10 (Vietnam time), Monday–Friday. The free plan has no persistent disk: state that
+# must survive restarts goes to Cloudflare R2 (storage.remote).
+# Secrets marked `sync: false` are entered once in the Render dashboard (never in git).
+services:
+  - type: web
+    name: astrq-radar
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      # --- data source (DNSE LightSpeed API)
+      - key: ASTRQ_PROVIDER__KIND
+        value: dnse
+      - key: ASTRQ_PROVIDER__DNSE__API_KEY
+        sync: false
+      - key: ASTRQ_PROVIDER__DNSE__API_SECRET
+        sync: false
+      - key: ASTRQ_CONTEXT__KIND
+        value: recorded
+      - key: ASTRQ_SESSIONS__ENFORCE_TRADING_DAYS
+        value: "true"
+      # --- persistence on Cloudflare R2 (free 10 GB)
+      - key: ASTRQ_STORAGE__REMOTE__KIND
+        value: r2
+      - key: ASTRQ_STORAGE__REMOTE__ENDPOINT   # https://<account_id>.r2.cloudflarestorage.com
+        sync: false
+      - key: ASTRQ_STORAGE__REMOTE__BUCKET
+        value: astrq-radar
+      - key: ASTRQ_STORAGE__REMOTE__ACCESS_KEY_ID
+        sync: false
+      - key: ASTRQ_STORAGE__REMOTE__SECRET_ACCESS_KEY
+        sync: false
+      # --- only traffic coming through radar.astrq.io.vn (Cloudflare) is served
+      - key: ASTRQ_API__ORIGIN_SECRET
+        generateValue: true
+      # --- optional Telegram alerts
+      - key: ASTRQ_ALERTS__TELEGRAM__ENABLED
+        value: "false"
+      - key: ASTRQ_LOG_LEVEL
+        value: INFO

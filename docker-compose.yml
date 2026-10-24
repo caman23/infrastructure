@@ -1,0 +1,19 @@
+# Single service for now (in-memory bus + JSONL storage, see docs/adr/0002 and 0003).
+# Redis / PostgreSQL+TimescaleDB are added here when those ADRs are revisited.
+services:
+  astrq:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      # must listen on all interfaces inside the container; exposure is limited
+      # by the 127.0.0.1 port binding above. Overrides ASTRQ_API__HOST from .env.
+      ASTRQ_API__HOST: 0.0.0.0
+      ASTRQ_API__PORT: "8000"
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config:ro
+    restart: unless-stopped
