@@ -76,9 +76,21 @@ node test.mjs             # optional: window logic self-test
 
 Open the Worker URL any time to see whether it would ping right now.
 
+## 6. Abuse protection (recommended)
+
+- Set `ASTRQ_API__ORIGIN_SECRET` + the Cloudflare transform rule (step 4): then only
+  Cloudflare can reach the service and the visitor IP header it sends cannot be forged.
+- `ASTRQ_API__TRUST_PROXY_HEADERS=true` (already in `render.yaml`) makes per-visitor rate
+  limits work behind Render's proxy even without the origin secret.
+- Cloudflare → Security → WAF → **Rate limiting rules**: `/api/` and `/ws`, 120 requests per
+  10 s per IP → Block for 60 s. Security → Bots → **Bot Fight Mode** on.
+- The app's own limits (`api.limits`) return `429`/`503` with `Retry-After`; see the README.
+
 ## Daily behaviour
 
 - 08:50 first ping wakes Render (~1 min cold start) → connects to DNSE before ATO.
 - Every 10 min until 15:10; the 15:05 job writes the EOD summary and uploads it to R2.
 - ~15:25 Render sleeps. Opening the dashboard after hours wakes it (~1 min) and shows the
-  day's signals restored from R2 (no live data until the next session).
+  day's signals restored from R2 (no live data until the next session). Earlier sessions
+  (within `retention_days`) can be reopened from the date picker: their signals and
+  end-of-day archive are fetched from R2 on demand.

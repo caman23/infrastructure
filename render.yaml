@@ -40,6 +40,12 @@ services:
       # Cloudflare Transform Rule adding header X-Astrq-Origin (see docs/deploy-render.md).
       # - key: ASTRQ_API__ORIGIN_SECRET
       #   generateValue: true
+      # --- rate limiting per visitor: Render's proxy sits in front, so the client address
+      # comes from CF-Connecting-IP / X-Forwarded-For. Setting ORIGIN_SECRET (above) makes
+      # that header unspoofable; without it, this flag is still needed or every visitor
+      # would share one budget.
+      - key: ASTRQ_API__TRUST_PROXY_HEADERS
+        value: "true"
       # --- public deployment (no login): visitors cannot switch tools on/off from the web
       - key: ASTRQ_API__ALLOW_TOOL_CONTROL
         value: "false"
