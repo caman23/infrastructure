@@ -1,10 +1,12 @@
-# Weekly GitHub Actions updates, opened against develop.
+# Monthly dependency updates, one grouped PR per ecosystem, opened against develop.
+# Security fixes still arrive as soon as an advisory is published.
 version: 2
 updates:
   - package-ecosystem: github-actions
     directory: /
     target-branch: develop
-    schedule: { interval: weekly, day: monday, timezone: Asia/Ho_Chi_Minh }
+    schedule: { interval: monthly, timezone: Asia/Ho_Chi_Minh }
+    open-pull-requests-limit: 1
     groups:
-      actions:
+      all:
         patterns: ["*"]
