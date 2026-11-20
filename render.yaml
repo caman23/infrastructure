@@ -3,7 +3,7 @@
 # pushes ghcr.io/<owner>/astrq-platform-api (backend + dashboard) on every merge to main
 # and calls this service's Deploy Hook with the exact `sha-<commit>` image, so
 # autoDeploy is off here. Roll back = redeploy an older sha tag from the Render dashboard.
-# Replace `your-org` below with the GitHub organization (lowercase).
+# Organization: caman23.
 # Free web services sleep after 15 min without INCOMING traffic (the outbound DNSE
 # WebSocket does not count), so deploy/keepalive-worker pings /health from 08:45 to
 # 15:10 (Vietnam time), Monday–Friday. The free plan has no persistent disk: state that
@@ -14,7 +14,7 @@ services:
     name: astrq-api
     runtime: image
     image:
-      url: ghcr.io/your-org/astrq-platform-api:latest
+      url: ghcr.io/caman23/astrq-platform-api:latest
       # private package only: a Render registry credential (GitHub PAT, read:packages)
       # creds:
       #   fromRegistryCreds:

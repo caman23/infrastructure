@@ -24,8 +24,7 @@ Changing env vars or secrets: Render dashboard (secrets) or `render.yaml` here
 (non-secret values, synced by the Blueprint). Rolling back: Render → Manual Deploy →
 an older `sha-<commit>` tag.
 
-Before the first use, replace `your-org` in `render.yaml` and `docker-compose.yml` with
-the GitHub organization name (lowercase).
+Images come from the `caman23` organization (`ghcr.io/caman23/astrq-platform-api`).
 
 ## Checks
 

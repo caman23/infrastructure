@@ -3,8 +3,8 @@
 services:
   astrq:
     # built and pushed by astrq-platform-api (Image workflow); pin a sha-<commit> tag
-    # instead of latest for a reproducible VPS deploy. Replace `your-org`.
-    image: ghcr.io/your-org/astrq-platform-api:latest
+    # instead of latest for a reproducible VPS deploy.
+    image: ghcr.io/caman23/astrq-platform-api:latest
     ports:
       - "127.0.0.1:8000:8000"
     env_file:
