@@ -2,7 +2,9 @@
 # Redis / PostgreSQL+TimescaleDB are added here when those ADRs are revisited.
 services:
   astrq:
-    build: .
+    # built and pushed by astrq-platform-api (Image workflow); pin a sha-<commit> tag
+    # instead of latest for a reproducible VPS deploy.
+    image: ghcr.io/caman23/astrq-platform-api:latest
     ports:
       - "127.0.0.1:8000:8000"
     env_file:
@@ -15,5 +17,6 @@ services:
       ASTRQ_API__PORT: "8000"
     volumes:
       - ./data:/app/data
-      - ./config:/app/config:ro
+      # the image ships config/; mount your own copy to override it:
+      # - ./config:/app/config:ro
     restart: unless-stopped

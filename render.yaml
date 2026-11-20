@@ -1,4 +1,9 @@
 # Render Blueprint — radar backend + dashboard on Render's free plan.
+# Image-backed: Render does not build anything. astrq-platform-api's `Image` workflow
+# pushes ghcr.io/<owner>/astrq-platform-api (backend + dashboard) on every merge to main
+# and calls this service's Deploy Hook with the exact `sha-<commit>` image, so
+# autoDeploy is off here. Roll back = redeploy an older sha tag from the Render dashboard.
+# Organization: caman23.
 # Free web services sleep after 15 min without INCOMING traffic (the outbound DNSE
 # WebSocket does not count), so deploy/keepalive-worker pings /health from 08:45 to
 # 15:10 (Vietnam time), Monday–Friday. The free plan has no persistent disk: state that
@@ -6,13 +11,18 @@
 # Secrets marked `sync: false` are entered once in the Render dashboard (never in git).
 services:
   - type: web
-    name: astrq-radar
-    runtime: docker
+    name: astrq-api
+    runtime: image
+    image:
+      url: ghcr.io/caman23/astrq-platform-api:latest
+      # private package only: a Render registry credential (GitHub PAT, read:packages)
+      # creds:
+      #   fromRegistryCreds:
+      #     name: ghcr
     plan: free
     region: singapore
-    dockerfilePath: ./Dockerfile
     healthCheckPath: /health
-    autoDeploy: true
+    autoDeploy: false
     envVars:
       # --- data source (DNSE LightSpeed API)
       - key: ASTRQ_PROVIDER__KIND
