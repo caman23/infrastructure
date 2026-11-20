@@ -10,4 +10,6 @@ crons = ["*/10 1-8 * * MON-FRI"]
 [vars]
 # Your Render service URL (the *.onrender.com address, NOT the Access-protected domain:
 # /health on it stays open while every other path requires the origin secret).
+# Switch to https://astrq-api.onrender.com when moving to the image-backed service
+# (docs/deploy-render.md, "Moving from the single-repo service").
 TARGET_URL = "https://astrq-radar.onrender.com"
